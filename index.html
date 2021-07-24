@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    <title>GoWaterReality</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.20/esri/css/main.css">
+    <style>
+        html,
+        body,
+        #viewview {
+            padding: 0px;
+            margin: 0px;
+            height: 100%;
+            width: 100%;
+        }
+
+        #info {
+            padding: 10px;
+            border-radius: 5px;
+            width: 30%;
+        }
+        
+        #update {
+            padding: 6px;
+        }
+        
+        #form {
+            background: #fff;
+        }
+        /* replaces esri-widget--panel */
+        
+        .esri-button {
+            height: 36px;
+        }
+        
+        .scroller {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+
+    </style>
+    <script src="https://js.arcgis.com/4.20"></script>
+</head>
+
+<body>
+    <div id="viewview"></div>
+    <div id="queryDiv" style="width: 150px;">
+        <select id="queryField" class="esri-widget esri-select">
+            <option value="Length_m">Pipe Length</option>
+            <option value="Roughness">Roughness</option>
+            <option value="Diameter">Diameter</option>
+        </select>
+
+        <select id="querySign" class="esri-widget esri-select">
+            <option value=">" >More than</option>
+            <option value="<">Less than</option>
+            <option value="=">Equal</option>
+        </select>
+
+        <input id="queryValue" class="esri-widget esri-input" style="height: 28px; width: 150px;" placeholder="Enter Value"></inpt>
+
+        <button id="filter" class="esri-widget esri-button" style="font-size: 12px; font-weight: bold; border: 1px solid gray; background-color: purple;">Filter</button>
+        <button id="stopfilter" class="esri-widget esri-button" style="font-size: 12px; font-weight: bold; border: 1px solid gray; background-color: purple;">Stop Filter</button>
+
+    </div>
+
+    <div id="info" class="esri-widget">
+        <h3>Select a distribution pipe to report issue</h3>
+        <h4>
+            You will only be able to update an issue (about all the pipe components: Service Meter, Fire hydrant, and Service Valve or Utility issue (Water Quality,etc.)) if work has not yet begun on it, e.g. status is either 'Submitted' or 'Received'.
+            Clic on the distribution pipe for which you would report issue, a form will open to fill it out.
+            <p>
+                If work has already begun, you have the ability to update the contact information.
+            </p>
+        </h4>
+    </div>
+
+    <div id="update" class="esri-widget esri-hidden">
+        <div id="form" class="scroller esri-component"></div>
+        <input type="button" class="esri-button" value="Update assessment" id="btnUpdate" />
+    </div>
+
+    <script>
+        require([
+        "esri/widgets/Editor",
+        "esri/widgets/BasemapGallery", 
+        "esri/widgets/ScaleBar",
+        "esri/widgets/Compass",
+        "esri/widgets/Home",
+        "esri/widgets/LayerList",
+        "esri/widgets/Legend",
+        "esri/widgets/Expand",
+        "esri/widgets/Search",
+        "esri/widgets/Track",
+        "esri/widgets/FeatureForm",
+        "esri/form/elements/FieldElement",
+        "esri/form/elements/GroupElement",
+        "esri/layers/FeatureLayer", 
+        "esri/views/MapView", 
+        "esri/Map"], 
+        
+        function(Editor,BasemapGallery,ScaleBar,Compass,Home,LayerList,
+        Legend,Expand,Search,Track,FeatureForm,FieldElement,GroupElement,FeatureLayer, MapView, Map){
+            
+            let highlight, editFeature;
+ 
+            // //Feature Layers Properties 
+            //===================================================================================
+            
+            // wfitting properties
+            const wfittingSymbol = {
+                    type: "simple",
+                    symbol: {
+                        type: "simple-marker",
+                        style: "circle",
+                        color: "gray",
+                        size: "4"
+                    }
+                }
+            const wfittingPopup = {
+                    "title": "Fitting",
+                    "content": [{
+                        type:"fields",
+                        fieldInfos: [{
+                            fieldName:"JoinType",
+                            label:"Join Type"
+                        },{
+                            fieldName:"SubDiamete",
+                            label:"Sub-Diameter"
+                        },{
+                            fieldName:"Diameter",
+                            label:"Main-Diameter"
+                        },{
+                            fieldName:"X",
+                            label:"X Coordinate (Carthage_UTM_32N)"
+                        },{
+                            fieldName:"Y",
+                            label:"Y Coordinate (Carthage_UTM_32N)"
+                        },{
+                            fieldName:"City",
+                            label:"City or Village"
+                        },{
+                            fieldName:"District",
+                            label:"District"
+                        }]
+                    }]
+                };
+
+            
+            // wsystemvalve properties
+            const wsystemvalveSymbol = {
+                    type: "simple",
+                    symbol: {
+                        type: "picture-marker",
+                        url: "https://img.icons8.com/material-rounded/96/000000/play-button-circled--v1.png",
+                        width: "15px",
+                        height: "15px"
+                    }
+                };
+            const wsystemvalvePopup = {
+                    "title": "System Valve",
+                    "content": [{
+                        type:"fields",
+                        fieldInfos: [{
+                            fieldName:"ValveID",
+                            label:"Valve ID"
+                        },{
+                            fieldName:"InstalDate",
+                            label:"Installation Date"
+                        },{
+                            fieldName:"Fabricator",
+                            label:"Manufacturer"
+                        },{
+                            fieldName:"X",
+                            label:"X Coordinate (Carthage_UTM_32N)"
+                        },{
+                            fieldName:"Y",
+                            label:"Y Coordinate (Carthage_UTM_32N)"
+                        },{
+                            fieldName:"City",
+                            label:"City or Village"
+                        },{
+                            fieldName:"District",
+                            label:"District"
+                        }]
+                    }]
+                };
+                 
+            // wservicemeter properties
+            const wservicemeterSymbol = {
+                    type: "simple",
+                    symbol: {
+                        type: "simple-marker",
+                        style: "square",
+                        color: "magenta",
+                        size: "4"
+                    }
+                };
+            
+            const wservicemeterPopup = {
+                    "title": "Water Service Meter",
+                    "content": [{
+                        type:"fields",
+                        fieldInfos: [{
+                            fieldName:"Meter_No",
+                            label:"Meter ID"
+                        },{
+                            fieldName:"Fabricator",
+                            label:"Manufacturer"
+                        },{
+                            fieldName:"X",
+                            label:"X Coordinate (Carthage_UTM_32N)"
+                        },{
+                            fieldName:"Y",
+                            label:"Y Coordinate (Carthage_UTM_32N)"
+                        },{
+                            fieldName:"City",
+                            label:"City or Village"
+                        },{
+                            fieldName:"District",
+                            label:"District"
+                        }]
+                    }]
+                };
+            
+            //wfireHydrant properties
+            const wfirehydrantSymbol = {
+                type: "simple",
+                symbol: {
+                    type: "picture-marker",
+                    url: "https://img.icons8.com/doodle/48/000000/fire-hydrant--v1.png",
+                    width: "20px",
+                    height: "20px"
+                }
+            };
+            const wfirehydrantPopup = {
+                    "title": "Fire Hydrant",
+                    "content": [{
+                        type:"fields",
+                        fieldInfos: [{
+                            fieldName:"Serial_No",
+                            label:"Fire Hydrant ID"
+                        },{
+                            fieldName:"InstalDate",
+                            label:"Installation Date"
+                        },{
+                            fieldName:"Fabricator",
+                            label:"Manufacturer"
+                        },{
+                            fieldName:"X",
+                            label:"X Coordinate (Carthage_UTM_32N)"
+                        },{
+                            fieldName:"Y",
+                            label:"Y Coordinate (Carthage_UTM_32N)"
+                        },{
+                            fieldName:"City",
+                            label:"City or Village"
+                        },{
+                            fieldName:"District",
+                            label:"District"
+                        }]
+                    }]
+                };
+
+
+            //wfirehydrantpipe properties
+            const wfirehydrantpipeSymbol = {
+                type: "simple",
+                symbol: {
+                        type: "simple-line",
+                        cap: "round",
+                        color: "red",
+                        width: "2px",
+                        style: "short-dash"
+                    }
+            };
+           
+            const wfirehydrantpipePopup = {
+                    "title": " Fire Hydrant Pipe",
+                    "content": [{
+                        type:"fields",
+                        fieldInfos: [{
+                            fieldName:"InstalDate",
+                            label:"Installation Date"
+                        },{
+                            fieldName:"Fabricator",
+                            label:"Manufacturer"
+                        },{
+                            fieldName:"Diameter",
+                            label:"Diameter"
+                        },{
+                            fieldName:"Length_m",
+                            label:"Pipe Length (m)"
+                        },{
+                            fieldName:"City",
+                            label:"City or Village"
+                        },{
+                            fieldName:"District",
+                            label:"District"
+                        }]
+                    }]
+                } ;
+
+            //wservicepipe properties
+            const wservicepipeSymbol = {
+                    type: "simple",
+                    symbol: {
+                        type: "simple-line",
+                        cap: "round",
+                        color: [125, 135, 212],
+                        width: "2px",
+                        style: "short-dash"
+                    }
+                };
+   
+            const wservicepipePopup = {
+                    "title": " Service Pipe",
+                    "content": [{
+                        type:"fields",
+                        fieldInfos: [{
+                            fieldName:"Material",
+                            label:"Material"
+                        },{
+                            fieldName:"Fabricator",
+                            label:"Manufacturer"
+                        },{
+                            fieldName:"Diameter",
+                            label:"Diameter"
+                        },{
+                            fieldName:"Length_m",
+                            label:"Pipe Length (m)"
+                        },{
+                            fieldName:"City",
+                            label:"City or Village"
+                        },{
+                            fieldName:"District",
+                            label:"District"
+                        }]
+                    }]
+                };
+
+
+            //Wdistributionpipe properties
+            const wdistributionpipeSymbol = {
+                type: "simple",
+                symbol: {
+                    type: "simple-line",
+                    cap: "round",
+                    color: [0, 172, 230],
+                    width: "5px",
+                    style: "solid"
+                }
+            };
+            const wdistributionpipeLabel = {
+                symbol: {
+                    type: "text",
+                    color: "black",
+                    haloColor: "white",
+                    haloSize: "1.5px",
+                    font: {
+                        size: "10px",
+                        family: "Noto sans",
+                        style: "italic",
+                        weight: "normal"
+                    }
+                },
+                labelExpressionInfo: {
+                    expression: "$feature.Diameter"
+                }
+            };
+            const wdistributionpipePopup = {
+                    "title": " Water Distribution Pipe",
+                    "content": [{
+                        type:"fields",
+                        fieldInfos: [{
+                            fieldName:"Material",
+                            label:"Material"
+                        },{
+                            fieldName: "InstalDate",
+                            label: "Installation Date"
+                        },{
+                            fieldName:"Roughness",
+                            label:"Roughness (Manning Coefficient)"
+                        },{
+                            fieldName:"Fabricator",
+                            label:"Manufacturer"
+                        },{
+                            fieldName:"Diameter",
+                            label:"Diameter"
+                        },{
+                            fieldName:"Length_m",
+                            label:"Pipe Length (m)"
+                        },{
+                            fieldName:"City",
+                            label:"City or Village"
+                        },{
+                            fieldName:"District",
+                            label:"District"
+                        }]
+                    }]
+                };
+
+            //Wtransmission pipe properties
+            const wtransmissionPipeSymbol = {
+                type: "simple",
+                symbol: {
+                    type: "simple-line",
+                    cap: "round",
+                    color: [0, 0, 230],
+                    width: "5px",
+                    style: "solid"
+                }
+            };
+            const wtransmissionPipeLabel = {
+                symbol: {
+                    type: "text",
+                    color: "black",
+                    haloColor: "white",
+                    haloSize: "1.5px",
+                    font: {
+                        size: "13px",
+                        family: "Noto sans",
+                        style: "italic",
+                        weight: "normal"
+                    }
+                },
+                labelExpressionInfo: {
+                    expression: "$feature.Diameter"
+                }
+            };
+            const wtransmissionPipePopup = {
+                    "title": " Water Transmision Pipe",
+                    "content": [{
+                        type:"fields",
+                        fieldInfos: [{
+                            fieldName:"Material",
+                            label:"Material"
+                        },{
+                            fieldName: "InstalDate",
+                            label: "Installation Date"
+                        },{
+                            fieldName:"Roughness",
+                            label:"Roughness (Manning Coefficient)"
+                        },{
+                            fieldName:"Fabricator",
+                            label:"Manufacturer"
+                        },{
+                            fieldName:"Diameter",
+                            label:"Diameter"
+                        },{
+                            fieldName:"Length_m",
+                            label:"Pipe Length (m)"
+                        },{
+                            fieldName:"City",
+                            label:"City or Village"
+                        },{
+                            fieldName:"District",
+                            label:"District"
+                        }]
+                    }]
+                };
+
+            // Water Tank properties
+            const wtankSymbol = {
+                type: "simple",
+                symbol: {
+                    type: "picture-marker",
+                    url: "https://img.icons8.com/ios-filled/100/000000/water-tower.png",
+                    width: "20px",
+                    height: "20px"
+                }
+            };
+            const wtankPopup = {
+                    "title": "Tank",
+                    "content": [{
+                        type:"fields",
+                        fieldInfos: [{
+                            fieldName:"LifeTime",
+                            label:"Life Time (years)"
+                        },{
+                            fieldName:"InstalDate",
+                            label:"Installation Date"
+                        },{
+                            fieldName:"Volume",
+                            label:"Volume (m3)"
+                        },{
+                            fieldName:"X",
+                            label:"X Coordinate (Carthage_UTM_32N)"
+                        },{
+                            fieldName:"Y",
+                            label:"Y Coordinate (Carthage_UTM_32N)"
+                        },{
+                            fieldName:"City",
+                            label:"City or Village"
+                        },{
+                            fieldName:"District",
+                            label:"District"
+                        }]
+                    }]
+                };
+
+
+
+            //Feature Layers (hosted on Arcgis Online server)
+            //accessible using my username and password (provided in the submission form)
+            //=======================================================================================
+
+            const wtransmissionPipe = new FeatureLayer({
+                url: "https://services3.arcgis.com/0G16ZDbXMbWFq4Wr/arcgis/rest/services/watertransmissionpipe/FeatureServer/0",
+                outFiels: ["*"],
+                popupEnabled: true,
+                id: "WTransmissionPipe",
+                renderer: wtransmissionPipeSymbol,
+                labelingInfo: [wtransmissionPipeLabel],
+                popupTemplate: wtransmissionPipePopup
+            });
+            const wdistributionpipe = new FeatureLayer({
+                url: "https://services3.arcgis.com/0G16ZDbXMbWFq4Wr/arcgis/rest/services/waterdistributionpipe/FeatureServer/0",
+                outFiels: ["*"],
+                popupEnabled: true,
+                id: "wdistributionpipe",
+                renderer: wdistributionpipeSymbol,
+                labelingInfo: [wdistributionpipeLabel],
+                popupTemplate: wdistributionpipePopup
+            });
+
+            const wfirehydrantpipe = new FeatureLayer({
+                url: "https://services3.arcgis.com/0G16ZDbXMbWFq4Wr/arcgis/rest/services/firehydrantpipe/FeatureServer/0",
+                outFiels: ["*"],
+                popupEnabled: true,
+                id: "wfirehydrantpipe",
+                renderer: wfirehydrantpipeSymbol,
+                popupTemplate: wfirehydrantpipePopup
+            });
+
+            const wservicepipe = new FeatureLayer({
+                url: "https://services3.arcgis.com/0G16ZDbXMbWFq4Wr/arcgis/rest/services/waterservicepipe/FeatureServer/0",
+                outFiels: ["*"],
+                popupEnabled: true,
+                id: "wservicepipe",
+                renderer: wservicepipeSymbol,
+                popupTemplate: wservicepipePopup
+            });
+
+            const wfirehydrant = new FeatureLayer({
+                url: "https://services3.arcgis.com/0G16ZDbXMbWFq4Wr/arcgis/rest/services/firehydrant/FeatureServer/0",
+                outFiels: ["*"],
+                popupEnabled: true,
+                id: "wfirehydrant",
+                renderer: wfirehydrantSymbol,
+                popupTemplate: wfirehydrantPopup
+            });
+            
+            const wsystemvalve = new FeatureLayer({
+                url: "https://services3.arcgis.com/0G16ZDbXMbWFq4Wr/arcgis/rest/services/watersystemvalve/FeatureServer/0",
+                outFiels: ["*"],
+                popupEnabled: true,
+                id: "wsystemvalve",
+                renderer: wsystemvalveSymbol,
+                popupTemplate: wsystemvalvePopup
+            });
+
+            const wservicemeter = new FeatureLayer({
+                url: "https://services3.arcgis.com/0G16ZDbXMbWFq4Wr/arcgis/rest/services/waterservicemeter/FeatureServer/0",
+                outFiels: ["*"],
+                popupEnabled: true,
+                id: "wservicemeter",
+                renderer: wservicemeterSymbol,
+                popupTemplate: wservicemeterPopup
+            })
+
+            const wfitting = new FeatureLayer({
+                url: "https://services3.arcgis.com/0G16ZDbXMbWFq4Wr/arcgis/rest/services/fitting/FeatureServer/0",
+                outFiels: ["*"],
+                popupEnabled: true,
+                id: "wfitting",
+                renderer: wfittingSymbol,
+                popupTemplate: wfittingPopup
+            });
+
+            const wTank = new FeatureLayer({
+                url: "https://services3.arcgis.com/0G16ZDbXMbWFq4Wr/arcgis/rest/services/watertank/FeatureServer/0",
+                outFiels: ["*"],
+                popupEnabled: true,
+                id: "wtank",
+                renderer: wtankSymbol,
+                popupTemplate: wtankPopup
+            });
+
+
+            //Map(map), MapView(view) and widgets
+            //==========================================================================================
+
+            //Map
+            const map = new Map({
+                basemap: "osm",
+                layers: [wtransmissionPipe, wdistributionpipe, wfirehydrantpipe,wfirehydrant, wfitting,
+            wsystemvalve,wservicepipe,wservicemeter,wTank]
+            });
+
+            //MapView
+            const view = new MapView({
+                container: "viewview",
+                map: map,
+                center: [10.272389674955631, 36.845825182689204],
+                zoom: 15
+            });
+
+            //Editor
+            const editor = new Editor({
+                view: view,
+                snappingOptions: {
+                    enabled: true,
+                    selfEnabled: true,
+                    featureEnabled: true,
+                }
+            });
+            view.ui.add(editor,{
+                    position: "top-left",
+                    index: 0
+                });
+
+            //BasemapGllaery
+            const basemapgallery = new BasemapGallery({
+                    view: view,
+                    container: document.createElement("div")
+                });
+            const sexpand = new Expand({
+                    view: view,
+                    content: basemapgallery.container,
+                    expandIconClass: "esri-icon-basemap",
+
+                });
+            view.ui.add(sexpand, {
+                    position: "top-right",
+                    index: 0
+                });
+
+           
+            //ScaleBar
+            const scalebar= new ScaleBar({
+                    view:view,
+                    unit:"dual"
+            });
+            view.ui.add(scalebar, {
+                    position: "bottom-left",
+                    index: 1
+                });
+
+            //Compass
+            const mycompass = new Compass({
+                    view: view
+            });
+            view.ui.add(mycompass,"top-left");
+
+            //Home
+            const myhome= new Home({
+                    view: view
+            });
+            view.ui.add(myhome, "top-left");
+            
+            //Legend
+            const legend =new Legend({
+                    view: view,
+                    container: document.createElement("div")
+                });
+            const expand = new Expand({
+                    view:view,
+                    content: legend.container,
+                    expandIconClass:"esri-icon-layers",
+                
+            });
+            view.ui.add(expand,{
+                    position: "top-right",
+                    index: 0
+            });
+
+            // LayerList
+            const layerlist = new LayerList({
+                    view: view,
+                    container: document.createElement("div")
+            });
+            const secondexpand = new Expand({
+                    view: view,
+                    content: layerlist.container,
+                    expandIconClass: "esri-icon-layer-list",
+
+            });
+            view.ui.add(secondexpand, {
+                    position: "top-right",
+                    index: 1
+            });
+
+            //Search by Attributes
+            const searchbyattributes = new Search({
+                view: view,
+                allPlaceholder:"Find Network Component",
+                sources:[{
+                    layer:wservicemeter,
+                    searchFields: ["Meter_No"],
+                    displayField:"Meter_No",
+                    exactMatch:false,
+                    outfilds:["*"],
+                    name:"Find Service Meter by ID"
+                },{
+                    layer:wdistributionpipe,
+                    searchFields:["Diameter"],
+                    displayField:"Diameter",
+                    exactMatch:false,
+                    outfilds:["*"],
+                    name:"Find Distribution Pipes by Diameter"
+
+                },{
+                    layer:wtransmissionPipe,
+                    searchFields:["Diameter"],
+                    displayField:"Diameter",
+                    exactMatch:false,
+                    outfilds:["*"],
+                    name:"Find Transmission Pipes by Diameter"
+
+                },{
+                    layer:wsystemvalve,
+                    searchFields: ["ValveID"],
+                    displayField:"ValveID",
+                    exactMatch:false,
+                    outfilds:["*"],
+                    name:"Find System Valve by ID"
+                },{
+                    layer:wfirehydrant,
+                    searchFields: ["Serial_No"],
+                    displayField:"Serial_No",
+                    exactMatch:false,
+                    outfilds:["*"],
+                    name:"Find Fire Hydrant by ID"
+                }],
+                includeDefaultSources: false
+            });
+            view.ui.add(searchbyattributes,{
+                position:"top-left",
+                index:0
+            });
+
+            //Tracking
+            const track = new Track({
+                view: view
+            });
+            view.ui.add(track,"top-left");
+
+            //=====================Customized Filter=========================================
+            view.ui.add(queryDiv, {
+                position: "bottom-left",
+                index:0
+            });
+
+            document.getElementById("filter").onclick = filterFunction;
+
+            function filterFunction() {
+                    let field = document.getElementById("queryField").value;
+                    let sign = document.getElementById("querySign").value;
+                    let enteredvalue = document.getElementById("queryValue").value;
+                    let filterExpression = field + sign + enteredvalue
+                    wdistributionpipe.definitionExpression = filterExpression
+                };
+
+            document.getElementById("stopfilter").onclick = stopFilter;
+
+            function stopFilter() {
+                    let filterExpression = ""
+                    wdistributionpipe.definitionExpression = filterExpression
+            };
+
+            //===========================Report Issues to utility(useful for utility Technicians)===================
+           
+           const fieldStatus = new FieldElement({
+                fieldName: "statusProb",
+                editable: false,
+                label: "Issue Status",
+                description: "E.g. Submitted, Received, In progress, or Completed."
+            });
+
+            const fieldResolution = new FieldElement({
+                fieldName: "resolution",
+                label: "Resolution",
+                editable: false,
+                description: "Resolution if status is set to Completed",
+                visibilityExpression: "($feature:any.statusProb == 'Completed') && (!(IsEmpty($feature:any.resolution)))"
+            });
+
+            // The following field elements will display within the first group element
+            const fieldCat = new FieldElement({
+                fieldName: "category",
+                label: "Category"
+            });
+
+            const fieldPipe = new FieldElement({
+                fieldName: "Pipeissue",
+                label: "Network problem type",
+                description: "E.g. pipe break, pipe damage, etc.",
+                visibilityExpression: "$feature.category== 'Pipe'"
+            });
+
+            const fieldUtilities = new FieldElement({
+                fieldName: "Utilityiss",
+                label: "Utility problem type",
+                description: "E.g. water quality, water pressure, etc.",
+                visibilityExpression: "$feature.category == 'Utility'"
+            });
+
+            const fieldVlave = new FieldElement({
+                fieldName: "Valveissue",
+                label: "System or Service Valve issue",
+                description: "E.g. Pressure regulator failing, illegal shutoff, etc.",
+                visibilityExpression: "$feature.category == 'Valve'"
+            });
+
+            const fieldMeter = new FieldElement({
+                fieldName: "Meterissue",
+                label: "Meter issue",
+                description: "E.g. is leaking, unreadable meter dial, damaged service pipe etc.",
+                visibilityExpression: "$feature.category == 'Meter'"
+            });
+
+            const fielFirehydrant = new FieldElement({
+                fieldName: "Firehydiss",
+                label: "Fire Hydrant issue",
+                description: "E.g. Vandalism, Leaks or damaged pipe, Debris, etc.",
+                visibilityExpression: "$feature.category == 'FireHydrant'"
+            });
+
+            const fieldDetails = new FieldElement({
+                fieldName: "details",
+                label: "Details",
+                description: "Enter additional details about the problem",
+                // If the category is a value and the sub categories are NOT NULL, show the details field
+                visibilityExpression: "($feature.category == 'Pipe' && (!IsEmpty($feature.Pipeissue))) || ($feature.category == 'Utility' && (!IsEmpty($feature.Utilityiss))) || ($feature.category == 'Valve' && (!IsEmpty($feature.Valveissue))) || ($feature.category == 'Meter' && (!IsEmpty($feature.Meterissue))) || ($feature.category == 'FireHydrant' && (!IsEmpty($feature.Firehydiss))) "
+            });
+
+            // Create a group element and pass in the above field elements
+            const groupUpdate = new GroupElement({
+                label: "Update issue",
+                description: "If work has not yet begun on issue, categorize and detail the problem",
+                visibilityExpression: "($feature:any.statusProb == 'Submitted') || ($feature:any.statusProb == 'Received')",
+                elements: [
+                    fieldCat,
+                    fieldPipe,
+                    fieldUtilities,
+                    fieldVlave,
+                    fieldMeter,
+                    fielFirehydrant,
+                    fieldDetails
+                ]
+            });
+
+            // Create field elements to pass into second group element
+
+            const fieldFirst = new FieldElement({
+                fieldName: "firstname",
+                label: "First name"
+            });
+
+            const fieldLast = new FieldElement({
+                fieldName: "lastname",
+                label: "Last name"
+            });
+
+            const fieldPhone = new FieldElement({
+                fieldName: "phone",
+                label: "Telephone number",
+                // Only show the telephone and email fields if both first and last names are entered
+                visibilityExpression: "((!IsEmpty($feature.firstname)) && (!IsEmpty($feature.lastname))) "
+            });
+
+            const fieldEmail = new FieldElement({
+                fieldName: "email",
+                label: "Email",
+                visibilityExpression: "((!IsEmpty($feature.firstname)) && (!IsEmpty($feature.lastname))) "
+            });
+
+            // Create second group element and pass in the above four field elements to it
+            const groupPOC = new GroupElement({
+                label: "Point of contact information",
+                description: "Who should we contact regarding this problem?",
+                elements: [fieldFirst, fieldLast, fieldPhone, fieldEmail]
+            });
+
+            // Add a new feature form and pass in the group and field elements from above
+            const form = new FeatureForm({
+                container: "form",
+                groupDisplay: "sequential",
+                formTemplate: {
+                    // Autocasts to FormTemplate
+                    title: "Report issues",
+                    description: "Provide information to the questions below",
+                    elements: [fieldStatus, fieldResolution, groupUpdate, groupPOC]
+                }
+            });
+
+            view.on("click", (event) => {
+                // Unselect any currently selected features
+                unselectFeature();
+                // Listen for when the user clicks on the view
+                view.hitTest(event).then((response) => {
+                    // If user selects a feature, select it
+                    const results = response.results;
+                    if (
+                        results.length > 0 &&
+                        results[0].graphic &&
+                        results[0].graphic.layer === wdistributionpipe
+                    ) {
+                        selectFeature(
+                            results[0].graphic.attributes[wdistributionpipe.objectIdField]
+                        );
+                    } else {
+                        // Hide the form and show the info div
+                        document.getElementById("update").classList.add("esri-hidden");
+                    }
+                });
+            });
+
+            // Function to unselect features
+            function unselectFeature() {
+                if (highlight) {
+                    highlight.remove();
+                }
+            };
+
+            // Highlight the clicked feature and display
+            // its attributes in the featureform.
+            function selectFeature(objectId) {
+                // query feature from the server
+                wdistributionpipe
+                    .queryFeatures({
+                        objectIds: [objectId],
+                        outFields: ["*"],
+                        returnGeometry: true
+                    })
+                    .then((results) => {
+                        if (results.features.length > 0) {
+                            editFeature = results.features[0];
+
+                            // display the attributes of selected feature in the form
+                            form.feature = editFeature;
+
+                            // highlight the feature on the view
+                            view.whenLayerView(editFeature.layer).then((layerView) => {
+                                highlight = layerView.highlight(editFeature);
+                            });
+
+                            if (
+                                document
+                                .getElementById("update")
+                                .classList.contains("esri-hidden")
+                            ) {
+                                document.getElementById("info").classList.add("esri-hidden");
+                                document
+                                    .getElementById("update")
+                                    .classList.remove("esri-hidden");
+                            }
+                        }
+                    });
+            }
+
+            // Listen to the feature form's submit event.
+            form.on("submit", () => {
+                if (editFeature) {
+                    // Grab updated attributes from the form.
+                    const updated = form.getValues();
+
+                    // Loop through updated attributes and assign
+                    // the updated values to feature attributes.
+                    Object.keys(updated).forEach((name) => {
+                        editFeature.attributes[name] = updated[name];
+                    });
+
+                    // Setup the applyEdits parameter with updates.
+                    const edits = {
+                        updateFeatures: [editFeature]
+                    };
+                    applyAttributeUpdates(edits);
+                }
+            });
+
+
+            // Call FeatureLayer.applyEdits() with specified params.
+            function applyAttributeUpdates(params) {
+                document.getElementById("btnUpdate").style.cursor = "progress";
+                wdistributionpipe
+                    .applyEdits(params)
+                    .then((editsResult) => {
+                        // Get the objectId of the newly added feature.
+                        // Call selectFeature function to highlight the new feature.
+                        if (editsResult.addFeatureResults.length > 0) {
+                            const objectId = editsResult.addFeatureResults[0].objectId;
+                            selectFeature(objectId);
+                        }
+                        document.getElementById("btnUpdate").style.cursor = "pointer";
+                    })
+                    .catch((error) => {
+                        console.log("===============================================");
+                        console.error(
+                            "[ applyEdits ] FAILURE: ",
+                            error.code,
+                            error.name,
+                            error.message
+                        );
+                        console.log("error = ", error);
+                        document.getElementById("btnUpdate").style.cursor = "pointer";
+                    });
+            }
+
+            document.getElementById("btnUpdate").onclick = () => {
+                // Fires feature form's submit event.
+                form.submit();
+            };
+            view.ui.add("update", "top-right");
+            view.ui.add("info", {
+                position: "top-right"
+            });
+
+       
+        });
+    </script>
+   
+</body>
+
+</html>

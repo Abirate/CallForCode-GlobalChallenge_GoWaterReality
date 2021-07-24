@@ -1,0 +1,16 @@
+========================The Web App version (On the localhost )=====================================
+
+1- Open the Git Bash on a folder composed of all these elements of the repository(node_modules,
+index.html, index.js, package-lock.json and package.json)
+2- Because Web App runs on top of Node.js, you must have Node.js installed on your computer
+3- Then, On the Git Bash, write : npm start (a message appears: app live in port 6040)
+4- Go to a browser and start the Web App in the browser with http://localhost:6040
+
+
+=======================The Mobile App version==========================================================
+
+1- Download the APK file on your phone
+2- Before you can install it on your phone you will need to make sure that third-party apps are allowed on your device. 
+3- Go to Menu > Settings > Security > and check Unknown Sources to allow your phone to install apps from sources other than the Google Play Store.
+4- Newer versions of Android do things a little differently. Rather than check a global setting to allow installation from unknown sources,
+you'll be prompted to allow your browser or file manager to install APKs the first time you attempt to do so.
