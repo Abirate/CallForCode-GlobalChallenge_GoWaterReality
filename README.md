@@ -1,6 +1,6 @@
 ![LogoGoWaterReality](https://user-images.githubusercontent.com/66887439/127163915-ae6a34ad-a66e-48ba-9262-10626797bff1.png)
 -----------------
-## What's the big issue ?  
+## What are the big issues ?  
 
 Many developing countries, mainly Sub-Saharan Africa, South Asia, and Latin America, are facing significant development challenges, which will likely increase their vulnerability to climate change risks, making climate-resilient development a critical imperative for these countries. Adapting to climate change is, therefore, not only about the long run, but also about making changes that ensure sustainable development right now. These countries tend to face rapid population growth and urbanization. The situation will be compounded by climate change effects, such as droughts, which are reducing the levels of the great lakes that are one of the main resources of the water supply networks in developing countries. Water supply is the first sector affected by shortages, resulting in reduced capacity to ensure water drinking for all, as well as the lack of access to clean water.
 
