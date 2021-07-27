@@ -1,6 +1,6 @@
 ![LogoGoWaterReality](https://user-images.githubusercontent.com/66887439/127163915-ae6a34ad-a66e-48ba-9262-10626797bff1.png)
 -----------------
-## What are the big issues ?  
+## What's the the problem ?  
 
 Many developing countries, mainly Sub-Saharan Africa, South Asia, and Latin America, are facing significant development challenges, which will likely increase their vulnerability to climate change risks, making climate-resilient development a critical imperative for these countries. Adapting to climate change is, therefore, not only about the long run, but also about making changes that ensure sustainable development right now. These countries tend to face rapid population growth and urbanization. The situation will be compounded by climate change effects, such as droughts, which are reducing the levels of the great lakes that are one of the main resources of the water supply networks in developing countries. Water supply is the first sector affected by shortages, resulting in reduced capacity to ensure water drinking for all, as well as the lack of access to clean water.
 
@@ -18,7 +18,7 @@ As mentioned above, progress in Africa is already slow. Progress towards achievi
 The importance of taking actions to enhance developing countries’ resilience to climate change at local and international level can’t be stressed enough. The IPCC (Intergovernmental Panel on Climate Change), defines the resilience as: "The ability of a system and its components to anticipate, absorb, accommodate or recover from the effects of hazardous event in __timely and efficient manner__. This includes ensuring the preservation, restoration or __improvement of the system’s essential basic structures and functions".__
 
 
-## How to tackle these issues ?
+## How to tackle these big issues ?
 
 Developing countries face, so far, the tragedy of "water development path dependency due to __missing data.__" That is, if the current status quo of missing data on water and sanitation networks continues in the future without major changes in direction, significant challenges will be ahead. In other words, the missing data of the past will strain planners and policy-makers to evolve and remold the water and sanitation systems __to meet new expectations,__ like increasing demand and __resilience to climate change.__ Missing data could undo developing countries’ gains from the past decades (mainly the poorest countries), making the future development of the water sector even __more challenging and costly.__
 
