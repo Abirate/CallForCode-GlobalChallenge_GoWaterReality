@@ -47,8 +47,14 @@ décrire comment a été faite l'architectute et comment ça fonctionne et parle
 y compris faire les shapefiles dès le début pour la zone
 
 ## Built with
+* [ArcGIS Server Online](https://doc.arcgis.com/en/arcgis-online/reference/arcgis-server-services.htm)
+* [ArcGIS API for JavaScript](https://developers.arcgis.com/javascript/latest/)
+* [ArcGIS Desktop](https://www.esri.com/en-us/arcgis/products/arcgis-for-personal-use/overview)
 
-## Contributing
+
+## Contributing  
+Please read [CONTRIBUTING.md](https://github.com/Call-for-Code/Project-Sample/blob/main/CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to me.
 
 ## Author
+* [Abir ELTAIEF](https://github.com/Abirate)
 
