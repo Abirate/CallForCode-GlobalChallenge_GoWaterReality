@@ -36,7 +36,11 @@ GoWaterReality is an application, that tackles the two big issues mentioned abov
 ## The architecture  
 ![AppSheetPetit](https://user-images.githubusercontent.com/66887439/127314756-0186aa4c-22b7-4f2e-a714-e8471a4578a8.jpg)
 
-
+The Steps:  
+1. Creation of the FileGeodatabase of the water or sanitation network, with __Arcgis Desktop__, using __ArcMap Geometric Network__. For more details, see: [Geometric Network](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/geometric-networks/what-are-geometric-networks-.htm)
+2. Exporting the Feature Layers of the FileGeodatabase to Shapefiles, and publishing them on __Arcgis Server Online (the Cloud)__, as __hosted Feature Layers__. For more details, see: [Data publishing](https://developers.arcgis.com/documentation/mapping-apis-and-services/data-hosting/data-publishing/#import-data)
+3. The Code of GoWaterReality (JS,HTML,CSS), use the [ArcGIS API for JavaScript](https://developers.arcgis.com/javascript/latest/), and the hosted Feature Layers on Arcgis Server Online.
+4. The user open the mobile or the web application GoWaterReality. it has to add the username and password. Once, logged in, the water network databse is loading (from the cloud: Arcgis Server Online). Then, he can use all the features of the application as well as the customized widgets: Edit any existing water network component or Add a new one , Report issue, Filter, Find Network component in the database by attribute (ID, Diameter, etc), Consult the attributes (Data) of any selected component of the water network, etc. For more details see the [Demo video ](#demo-video)
 
 
 
