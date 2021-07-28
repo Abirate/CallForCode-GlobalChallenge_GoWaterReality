@@ -36,12 +36,19 @@ GoWaterReality is an application, that tackles the two big issues mentioned abov
 ## The architecture  
 ![AppSheetPetit](https://user-images.githubusercontent.com/66887439/127314756-0186aa4c-22b7-4f2e-a714-e8471a4578a8.jpg)
 
-__The steps & how does it work?__ :  
+__The steps :__  
 1. Creation of the [FileGeodatabase](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/administer-file-gdbs/file-geodatabases.htm) of the water or sanitation network, with [Arcgis Desktop](https://www.esri.com/en-us/arcgis/products/arcgis-for-personal-use/overview), using __ArcMap Geometric Network__. For more details, see: [Geometric Network](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/geometric-networks/what-are-geometric-networks-.htm);
 2. Exporting the [Feature Layers](https://doc.arcgis.com/en/arcgis-online/reference/feature-layers.htm) of the FileGeodatabase to [Shapefiles](https://doc.arcgis.com/en/arcgis-online/reference/shapefiles.htm), and publishing them on __Arcgis Server Online (the Cloud)__, as __hosted Feature Layers__. For more details, see: [Data publishing](https://developers.arcgis.com/documentation/mapping-apis-and-services/data-hosting/data-publishing/#import-data);
 3. The Code of GoWaterReality (JS,HTML,CSS,Node.JS), uses the [ArcGIS API for JavaScript](https://developers.arcgis.com/javascript/latest/), and the hosted Feature Layers on Arcgis Server Online(created in step 2);
 4. The user opens the mobile or web application GoWaterReality. It has to add the username and password. Once logged in, the water network data is loaded (from the cloud: Arcgis Server Online). Then, he can use all the features of the application as well as the customized widgets: Edit any existing water network component or add a new one, report issue about any component (useful for utility technicians), filter, find network components in the database by attribute (ID, Diameter, etc), consult the attributes (data) of any selected component of the water network, etc. For more details, see the [Demo video ](#demo-video)
 
+## How Does it work?
+To run the web and the mobile app of __GoWaterReality__, see the file __Instructions_to_run_the_app__, in the repository.  
+For all intents and purposes, I added, in the repository, the shapefiles created on ArcGIS Desktop (before publishing them on Arcgis Server Online). These are the nine (09) zip files on the repository. Together, they form the components of any water network. They are openable on any GIS software. 
+
+__Note:__ 
+* I only used a database for a piped water network (but it is almost the same thing with a sewer network: it is composed of pipes, valves, fittings,etc)
+* The database (data) used for the water network has nothing to do with reality. It is a database which was created as a demo for the call for code Global Challenge,  but the scheme (fields of all the shapefiles), is valid for any water network (it is even extensible, with new other fields). 
 ## Demo video
 
 
