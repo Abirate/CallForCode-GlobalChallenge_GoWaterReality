@@ -33,7 +33,9 @@ GoWaterReality is an application, that tackles the two big issues mentioned abov
 
 * Concerning the second big issue, GoWaterReality makes effective and efficient changes to __the management of water and sanitation networks__ in developing countries. In fact, GoWaterReality has developed a feature to __report issues__ about all the components of a water or sanitation network (tanks, pipes, system valves, service meters, fire hydrants, pumps, water quality, etc), __in real time__, and directly update the database about them. Even in a rural area, (far from the utility), a technician from the regional unit could directly report the issue, such as a pipe break (for example), and update the database when reporting the issue. At the same time, the central utility (situated in the capital, for example), can monitor the issue in real time. As a result, the utility could act __quickly__ and make informed decisions __in record time__, to __avoid excessive water loss or water quality alteration__.
 
-## The architecture
+## The architecture  
+![AppsheetPetit](https://user-images.githubusercontent.com/66887439/127310216-d3d1d565-2a31-4df1-8fb7-3012c1b364da.jpg)
+
 
 
 ## How does it work ?
