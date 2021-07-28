@@ -36,7 +36,7 @@ GoWaterReality is an application, that tackles the two big issues mentioned abov
 ## The architecture  
 ![AppSheetPetit](https://user-images.githubusercontent.com/66887439/127314756-0186aa4c-22b7-4f2e-a714-e8471a4578a8.jpg)
 
-The Steps:  
+__The Steps & how does it work?__ :  
 1. Creation of the [FileGeodatabase](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/administer-file-gdbs/file-geodatabases.htm) of the water or sanitation network, with [Arcgis Desktop](https://www.esri.com/en-us/arcgis/products/arcgis-for-personal-use/overview), using __ArcMap Geometric Network__. For more details, see: [Geometric Network](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/geometric-networks/what-are-geometric-networks-.htm);
 2. Exporting the [Feature Layers](https://doc.arcgis.com/en/arcgis-online/reference/feature-layers.htm) of the FileGeodatabase to [Shapefiles](https://doc.arcgis.com/en/arcgis-online/reference/shapefiles.htm), and publishing them on __Arcgis Server Online (the Cloud)__, as __hosted Feature Layers__. For more details, see: [Data publishing](https://developers.arcgis.com/documentation/mapping-apis-and-services/data-hosting/data-publishing/#import-data);
 3. The Code of GoWaterReality (JS,HTML,CSS,Node.JS), uses the [ArcGIS API for JavaScript](https://developers.arcgis.com/javascript/latest/), and the hosted Feature Layers on Arcgis Server Online(created in step 2);
