@@ -43,12 +43,16 @@ __The steps :__
 4. The user opens the mobile or web application GoWaterReality. It has to add the username and password. Once logged in, the water network data is loaded (from the cloud: Arcgis Server Online). Then, he can use all the features of the application as well as the customized widgets: Edit any existing water network component or add a new one, report issue about any component (useful for utility technicians), filter, find network components in the database by attribute (ID, Diameter, etc), consult the attributes (data) of any selected component of the water network, etc. For more details, see the [Demo video ](#demo-video)
 
 ## How Does it work?
-To run the web and the mobile app of __GoWaterReality__, see the file __Instructions_to_run_the_app__, in the repository.  
-For all intents and purposes, I added, in the repository, the shapefiles created on ArcGIS Desktop (before publishing them on Arcgis Server Online). These are the nine (09) zip files on the repository. Together, they form the components of any water network. They are openable on any GIS software. 
+* To run the web and the mobile app of __GoWaterReality__, see the file __Instructions_to_run_the_app__, in the repository.  
+* For all intents and purposes, I added, to the repository, the shapefiles created on [ArcGIS Desktop](https://www.esri.com/en-us/arcgis/products/arcgis-for-personal-use/overview) (before publishing them on ArcGIS Server Online, as hosted feature layers). These are the nine (09) zip files in the repository. Together, they form the components of any water network. They are openable with any GIS software. 
+* I also added to the repository a file called: __description_feature_layers__. It contains the description of the nine (09) shapefiles (or of the hosted feature layers, after publishing the shapefiles on ArcGIS Server Online). 
 
 __Note:__ 
-* I only used a database for a piped water network (but it is almost the same thing with a sewer network: it is composed of pipes, valves, fittings,etc)
-* The database (data) used for the water network has nothing to do with reality. It is a database which was created as a demo for the call for code Global Challenge,  but the scheme (fields of all the shapefiles), is valid for any water network (it is even extensible, with new other fields). 
+* In __GoWaterReality__, I only used [Feature Layers](https://doc.arcgis.com/en/arcgis-online/reference/feature-layers.htm) for a piped water network (but it is almost the same thing as a sewer network: the latter is also composed of pipes, valves, fittings, etc). The application is, therefore, valid for sewer networks. 
+* The database (data) used for the water network has nothing to do with reality. It is a database which was created as a demo for the call for code Global Challenge, but the __scheme__ (fields of all the Feature layers) is valid for any water network (it is even extensible, with new other fields). 
+* The network has been created according the [Geometric Network](https://desktop.arcgis.com/en/arcmap/10.3/manage-data/geometric-networks/what-are-geometric-networks-.htm) rules with ArcMap ([ArcGIS Desktop](https://www.esri.com/en-us/arcgis/products/arcgis-for-personal-use/overview)
+).  
+
 ## Demo video
 
 
