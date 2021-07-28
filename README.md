@@ -28,9 +28,8 @@ Reducing water use and better water network management will be critical in manag
 => Resilience (as an improvement of the system’s essential basic structures and functions), needs to be integrated into drinking-water and sanitation network management to cope with present climate variability. It will be critical in controlling the adverse impacts of future variability. This will be possible via __technology that reforms water and sanitation networks' management__ from the outset of new programs and projects (and not simply as an afterthought).
 
 ## How can GoWaterReality help?
-parler coment j'ai résud...(doument +ce que 'ai ajouté sur leakages: report issue)
-
-et dire que c'est la même chose pour les réseaux dassinissement ()
+GoWaterReality is an application (web and mobile app), that tackles the two big issues mentioned before, at the same time. 
+* Concerning the first big issue: GoWaterReality, can consistently update baseline data about water and sewer networks over time, on the cloud. With this easy to use tool, the baseline data about water and sanitation networks in developing countries will be continuously "fully updated" and will become "climate-proof". So that, we could  build upon it, to undertake new projects to rapidly meet the multidimensional challenges of climate change, by avoiding many time-consuming, very expensive, and endless projects. This tool will be the backbone of all future successful projects. It will strengthen developing countries’ capacity to plan, design, and operate climate-resilient and long-lived projects for their own water infrastructure. Furthermore, it will prepare the ground for Artificial Intelligence projects, such as warning systems on networks,  which could never see the light of day without this database updated over time on the cloud.
 
 ## The architecture
 ou ici aussi docuent API
