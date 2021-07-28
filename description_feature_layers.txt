@@ -1,0 +1,28 @@
+===============================================================================================================================================================
+Description of the feature layers 
+===============================================================================================================================================================
+
+1- FireHydrant: Shapefile of of the Fire Hydrants: main component of the piped water network, used to extinguish fires.
+
+2- FireHydrantPipe : Pipes connecting the Fire Hydrants to the water distribution network.
+
+3- Fitting: Shapefile of of the fittings: important component of the plumbing system, used to join pipes (with any section), there are many types for the water
+network: coupling, tee, bend, cross, saddle,etc.
+
+4- WaterDistributionPipe : Shapefile of  the water distribution pipes (connected to the transmission pipes).See WTransmissionPipe, below
+
+5- WaterServiceMeter : Shapefile of Water service meters: the service meter  is the practice of measuring water use, of residential and commercial building units 
+that are supplied with water by a public water supply system. 
+
+6- WaterServicePipe : Shapefile of service pipes: they connect the households, businesses, the commercial units (etc.), to the piped water network.
+Each service pipe is equipped with a water service meter.
+
+7- WaterSystemValve : Shapefile of the system valves: a main component of the water network. They provide several functions, including: Starting or stopping flow 
+based on the valve state. Regulating flow and pressure within a piping system. Controlling the direction of flow within a piping system. Throttling flow rates 
+within a piping system.
+
+8- WaterTank: Shapefile of an important component of the piped Water Network: The Tank (The Feed Source)
+
+9- WaterTransmissionPipe : Shapefile of a the water transmission pipes (principal pipes coming directly from the feed source, eg: water Tank)
+
+
