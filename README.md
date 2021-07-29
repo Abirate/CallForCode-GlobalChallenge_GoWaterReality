@@ -43,7 +43,7 @@ __The steps :__
 4. The user opens the mobile or web application GoWaterReality. It has to add the username and password. Once logged in, the water network data is loaded (from the cloud: Arcgis Server Online). Then, he can use all the features of the application as well as the customized widgets: Edit any existing water network component or add a new one, report issue about any component (useful for utility technicians), filter, find network components in the database by attribute (ID, Diameter, etc), consult the attributes (data) of any selected component of the water network, etc. For more details, see the [Demo video ](#demo-video)
 
 ## How Does it work?
-* To run the web and the mobile app of __GoWaterReality__, see the file __Instructions_to_run_the_app__, in the repository.  
+* To run the web and the mobile app of __GoWaterReality__, see the file __Instructions_to_run_the_app__, in the repository (You will be asked for a username and a password. Please use the username and the password provided in the submission form).  
 * For all intents and purposes, I added, to the repository, the shapefiles created on [ArcGIS Desktop](https://www.esri.com/en-us/arcgis/products/arcgis-for-personal-use/overview) (before publishing them on ArcGIS Server Online, as hosted feature layers). These are the nine (09) zip files in the repository. Together, they form the components of any water network. They are openable with any GIS software. 
 * I also added to the repository a file called: __description_feature_layers__. It contains the description of the nine (09) shapefiles (or of the hosted feature layers, after publishing the shapefiles on ArcGIS Server Online). 
 
