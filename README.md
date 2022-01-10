@@ -56,7 +56,7 @@ __Note:__
 ).  
 
 ## Demo video
-[![IMAGE ALT TEXT](http://img.youtube.com/vi/XP8uZfnCYQI/0.jpg)](https://www.youtube.com/watch?v=XP8uZfnCYQI "My fine-tuned GPT-3 Demo vs GPT-J - EleutherAI Demo")
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/m0aQ8yCOPr8/0.jpg)](https://www.youtube.com/watch?v=m0aQ8yCOPr8 "Call for Code Global Challenge 2021")
 
 ## The Roadmap
 ![RoadMap](https://user-images.githubusercontent.com/66887439/127402821-92892104-a423-4f3e-b657-703cec7069f4.jpg)
